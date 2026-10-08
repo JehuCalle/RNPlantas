@@ -1,2 +1,2 @@
-**/Makefile* linguist-documentation
+**/Makefile linguist-vendored
 ios/Pods/**/* linguist-vendored
