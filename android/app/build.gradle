@@ -2,6 +2,12 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+apply plugin: "com.google.gms.google-services"
+
+
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -73,11 +79,11 @@ def enableProguardInReleaseBuilds = false
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 android {
-    ndkVersion rootProject.ext.ndkVersion
+    ndkVersion = rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdk rootProject.ext.compileSdkVersion
+    compileSdk = rootProject.ext.compileSdkVersion
 
-    namespace "com.rnplantas"
+    namespace = "com.rnplantas"
     defaultConfig {
         applicationId "com.rnplantas"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -92,17 +98,33 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+        storeFile file('my-key.keystore')
+        storePassword '202712'
+        keyAlias 'my-key-alias'
+        keyPassword '202712'
+        }
     }
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            signingConfig = signingConfigs.debug
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig = signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+    tasks.whenTaskAdded { task ->
+        if (task.name == 'generateDebugLintReportModel') {
+            task.dependsOn ':app:copyReactNativeVectorIconFonts'
+        }
+
+        // Aseguramos que 'lintAnalyzeDebug' dependa de 'copyReactNativeVectorIconFonts'
+        if (task.name == 'lintAnalyzeDebug') {
+            task.dependsOn ':app:copyReactNativeVectorIconFonts'
         }
     }
 }
@@ -110,6 +132,8 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+
+    implementation 'com.google.firebase:firebase-messaging:24.0.0'
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

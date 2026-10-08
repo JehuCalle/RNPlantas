@@ -28,7 +28,7 @@ build/
 .idea
 .gradle
 local.properties
-*.iml
+*.imld
 *.hprof
 .cxx/
 *.keystore
@@ -73,3 +73,25 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Archivos de configuración locales y secretas (Tokens, API keys, etc.)
+.env
+.env.local
+
+# Compilaciones nativas de Android
+android/.gradle/
+android/app/build/
+android/build/
+*.iml
+*.apk
+*.aar
+
+# Compliaciones nativas de iOS
+ios/Pods/
+ios/build/
+.xcode.env.local
+
+#Caché de Metro y herramientas de desarrollo
+.metro-cache/
+.shadow-tmp/
+.eslintcache
